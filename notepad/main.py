@@ -1,7 +1,37 @@
 import flet as ft
+from flet import (UserControl, ControlEvent, TextField, InputBorder, AppBar)
+
+class TextEditor(ft.UserControl):
+    def __init__(self) -> None:
+        super().__init__()
+        self.textfield = ft.TextField(
+                                    multiline=True, 
+                                    autofocus = True, 
+                                    border=ft.InputBorder.NONE, 
+                                    min_lines=40, 
+                                    on_change=save_text, 
+                                    content_padding=30,
+                                    cursor_color='yellow'
+                                )
+
+def save_text(self, e: ft.ControlEvent) -> None:
+    with open('save.txt', 'w') as f:
+        f.write(self.textfield.value)
+
+def read_text(self) -> str | None:
+    try:
+        with open('save.txt', 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        self.texfield.hind_text = 'Welcome to the Turbo Editor'
+
+def build(self) -> TextField:
+    self.textfield.value = self.read_text()
+    return self.textfield
 
 def main(page: ft.Page):
     page.title = "Turbo notepad"
+    page.scroll = True
     appbar_text_ref = ft.Ref[ft.Text]()
 
     def handle_menu_item_click(e):
@@ -19,73 +49,33 @@ def main(page: ft.Page):
     def handle_on_hover(e):
         print(f"{e.control.content.value}.on_hover")
 
-    menubar = ft.MenuBar(
-        expand=True,
-        style=ft.MenuStyle(
-            alignment=ft.alignment.top_left,
-            bgcolor="#ACBFA4",
-            mouse_cursor={ft.MaterialState.HOVERED: ft.MouseCursor.WAIT,
-                          ft.MaterialState.DEFAULT: ft.MouseCursor.ZOOM_OUT},
-        ),
-        controls=[
-            ft.SubmenuButton(
-                content=ft.Text("File", color="#262626", font_family="Consolas"),
-                on_open=handle_on_open,
-                on_close=handle_on_close,
-                on_hover=handle_on_hover,
-                controls=[
-                    ft.MenuItemButton(
-                        content=ft.Text("About", font_family="Consolas"),
-                        leading=ft.Icon(ft.icons.INFO, color="#ACBFA4"),
-                        style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN_100}, color={ft.MaterialState.DEFAULT: "#ffffff" ,ft.MaterialState.HOVERED: "#262626"}),
-                        on_click=handle_menu_item_click
-                    ),
-                    ft.MenuItemButton(
-                        content=ft.Text("Save", font_family="Consolas"),
-                        leading=ft.Icon(ft.icons.SAVE, color="#ACBFA4"),
-                        style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN_100}, color={ft.MaterialState.DEFAULT: "#ffffff" ,ft.MaterialState.HOVERED: "#262626"}),
-                        on_click=handle_menu_item_click
-                    ),
-                    ft.MenuItemButton(
-                        content=ft.Text("Quit", font_family="Consolas"),
-                        leading=ft.Icon(ft.icons.CLOSE, color="#ACBFA4"),
-                        style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN_100}, color={ft.MaterialState.DEFAULT: "#ffffff" ,ft.MaterialState.HOVERED: "#262626"}),
-                        on_click=handle_menu_item_click
-                    )
+    textField = ft.TextField(
+                                    multiline=True, 
+                                    autofocus = True, 
+                                    border=ft.InputBorder.NONE, 
+                                    min_lines=40,
+                                    content_padding=30,
+                                    cursor_color='yellow'
+                                )
+
+    menubar = AppBar(
+        leading_width=40,
+        title=ft.Text("Turbo notepad", color="#262626", font_family="Consolas"),
+        bgcolor= "#ACBFA4",
+        actions=[
+            ft.IconButton(ft.icons.SEARCH, icon_color=ft.colors.PRIMARY),
+            ft.PopupMenuButton(
+                items=[
+                    ft.PopupMenuItem(text="About"),
+                    ft.PopupMenuItem(text="Settings"),
                 ]
             ),
-            ft.SubmenuButton(
-                content=ft.Text("View", color="#262626", font_family="Consolas"),
-                on_open=handle_on_open,
-                on_close=handle_on_close,
-                on_hover=handle_on_hover,
-                controls=[
-                    ft.SubmenuButton(
-                        content=ft.Text("Zoom", font_family="Consolas"),
-                        controls=[
-                            ft.MenuItemButton(
-                                content=ft.Text("Magnify", font_family="Consolas"),
-                                leading=ft.Icon(ft.icons.ZOOM_IN, color="#ACBFA4"),
-                                close_on_click=False,
-                                style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN_100}, color={ft.MaterialState.DEFAULT: "#ffffff" ,ft.MaterialState.HOVERED: "#262626"}),
-                                on_click=handle_menu_item_click
-                            ),
-                            ft.MenuItemButton(
-                                content=ft.Text("Minify", font_family="Consolas"),
-                                leading=ft.Icon(ft.icons.ZOOM_OUT, color="#ACBFA4"),
-                                close_on_click=False,
-                                style=ft.ButtonStyle(bgcolor={ft.MaterialState.HOVERED: ft.colors.GREEN_100}, color={ft.MaterialState.DEFAULT: "#ffffff" ,ft.MaterialState.HOVERED: "#262626"}),
-                                on_click=handle_menu_item_click
-                            )
-                        ]
-                    )
-                ]
-            ),
-        ]
+        ],
     )
 
-    page.add(
-        ft.Row([menubar]),
+    page.add(menubar, textField)
+    page.floating_action_button = ft.FloatingActionButton(
+        icon=ft.icons.ADD, bgcolor="#ACBFA4"
     )
     page.update()
 
