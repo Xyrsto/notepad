@@ -3,7 +3,7 @@
 
 ## Why?
 Why reinvent the wheel? Because we as engineers like that!
-This is a very simple notepad, made as learning tool to learn Electron, Svelte, Typescript and Tailwind.
+This is a very simple notepad, made as a learning tool to learn Electron, Svelte, Typescript and Tailwind.
 
 ## How is the process going?
 Hard. Very hard. Since I am not a frontend developer, learning how to design "good" interfaces is very hard.
