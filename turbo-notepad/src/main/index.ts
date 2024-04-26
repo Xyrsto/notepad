@@ -3,6 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+
 function createWindow(): void {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -18,12 +19,12 @@ function createWindow(): void {
         vibrancy: 'under-window',
         visualEffectState: 'active',
         titleBarStyle: 'hidden',
-        trafficLightPosition: {x:5, y: 10},
+        trafficLightPosition: { x: 5, y: 10 },
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
-            sandbox: true,
-            contextIsolation: true
-        }
+            contextIsolation: false,
+            nodeIntegration: true
+        },
     })
 
     mainWindow.on('ready-to-show', () => {
@@ -78,6 +79,8 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 })
+
+
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
